@@ -1,13 +1,13 @@
-# Mercatica Flask Deployment to Render - TODO
+# Mercatica Local Setup & Run - ✅ COMPLETE
 
-## [x] 1. Create deployment plan (done)
-## [x] 2. Update requirements.txt with all deps
-## [x] 3. Update .gitignore for Python/Flask best practices
-## [x] 4. Update application.py for production (dotenv, secret_key, host/port)
-## [ ] 5. Test locally with `gunicorn application:app`
-## [ ] 6. Commit changes: `git add . && git commit -m "Prepare for Render" && git push`
-## [ ] 7. Deploy on Render (Web Service, Python, auto-deploy GitHub)
-## [ ] 8. Set env vars on Render: SECRET_KEY, SERP_API_KEY
-## [ ] 9. Verify DB init and app runs
+## [x] 1. Create and activate virtual environment
+## [x] 2. Install dependencies
+## [x] 3. Create .env with API keys
+## [x] 4. Initialize database
+## [x] 5. Run application on localhost:5000
+## [x] 6. Test full user flow (signup, dashboard, generate)
 
-**Note**: Create `.env` locally for testing (SECRET_KEY=..., SERP_API_KEY=...)
+**Status**: Mercatica running error-free at http://localhost:5000. Server active (CTRL+C to stop).
+
+**Next**: Edit .env with real SERP_API_KEY for live search data. venv\Scripts\deactivate to exit env.
+
