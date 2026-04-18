@@ -4,12 +4,12 @@ import sqlite3
 import os
 from dotenv import load_dotenv
 
-application = Flask(__name__)
-application.secret_key = os.environ.get('SECRET_KEY', 'f84f02d2d0076d67d294bfece7269ab4a95277ef51429e4ec226c8f09ddbddde')
+app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'f84f02d2d0076d67d294bfece7269ab4a95277ef51429e4ec226c8f09ddbddde')
 
 # -------------------- CONTEXT --------------------
 
-@application.context_processor
+@app.context_processor
 def inject_theme():
     return dict(theme=session.get('theme', 'light'))
 
@@ -26,7 +26,7 @@ def extract_section_by_number(text, number):
     result = []
 
     for line in lines:
-        if line.strip().startswith(f"{number}."):
+        if line.strip().startswith(f"{number}.:"):
             capture = True
             result.append(line.split(":", 1)[-1].strip())
         elif capture:
@@ -78,11 +78,11 @@ def create_tables():
 
 # -------------------- ROUTES --------------------
 
-@application.route('/')
+@app.route('/')
 def home():
     return redirect('/login')
 
-@application.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     message = request.args.get('message')
     if request.method == 'POST':
@@ -95,7 +95,7 @@ def login():
             return render_template('login.html', error="Invalid credentials")
     return render_template('login.html', message=message)
 
-@application.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         name = request.form['name']
@@ -109,20 +109,20 @@ def signup():
         return redirect(url_for('login', message='Account Created Successfully'))
     return render_template('signup.html')
 
-@application.route('/dashboard')
+@app.route('/dashboard')
 def dashboard():
     if 'user' not in session:
         return redirect('/login')
     message = request.args.get('message')
     return render_template('dashboard.html', message=message)
 
-@application.route('/toggle-theme')
+@app.route('/toggle-theme')
 def toggle_theme():
     current = session.get('theme', 'light')
     session['theme'] = 'dark' if current == 'light' else 'light'
     return redirect(request.referrer or url_for('dashboard'))
 
-@application.route('/generate', methods=['POST'])
+@app.route('/generate', methods=['POST'])
 def generate():
     if 'user' not in session:
         return redirect('/login')
@@ -144,7 +144,7 @@ def generate():
 
     return render_template('result.html', branding=branding)
 
-@application.route('/assistant', methods=['GET', 'POST'])
+@app.route('/assistant', methods=['GET', 'POST'])
 def branding_assistant():
     if 'user' not in session:
         return redirect('/login')
@@ -196,7 +196,7 @@ def branding_assistant():
 
     return render_template('assistant.html', suggestions=suggestions)
 
-@application.route('/history')
+@app.route('/history')
 def history():
     if 'user' not in session:
         return redirect('/login')
@@ -214,7 +214,7 @@ def history():
 
     return render_template('history.html', history=rows)
 
-@application.route('/roadmap', methods=['GET', 'POST'])
+@app.route('/roadmap', methods=['GET', 'POST'])
 def roadmap():
     if 'user' not in session:
         return redirect('/login')
@@ -242,7 +242,7 @@ def roadmap():
 
     return render_template('roadmap.html', roadmap=roadmap)
 
-@application.route('/personality', methods=['GET', 'POST'])
+@app.route('/personality', methods=['GET', 'POST'])
 def personality():
     if 'user' not in session:
         return redirect('/login')
@@ -270,7 +270,7 @@ def personality():
 
     return render_template('personality.html', profile=profile)
 
-@application.route('/analyzer', methods=['GET', 'POST'])
+@app.route('/analyzer', methods=['GET', 'POST'])
 def analyzer():
     if 'user' not in session:
         return redirect('/login')
@@ -328,19 +328,19 @@ def analyzer():
                            persona=persona_data,
                            swot=swot_data)
 
-@application.route('/about')
+@app.route('/about')
 def about():
     if 'user' not in session:
         return redirect('/login')
     return render_template('about.html')
 
-@application.route('/help')
+@app.route('/help')
 def help():
     if 'user' not in session:
         return redirect('/login')
     return render_template('help.html')
 
-@application.route('/contact', methods=['GET', 'POST'])
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if 'user' not in session:
         return redirect('/login')
@@ -353,7 +353,7 @@ def contact():
 
     return render_template('contact.html')
 
-@application.route('/logout')
+@app.route('/logout')
 def logout():
     session.clear()
     return redirect('/login')
@@ -364,4 +364,4 @@ if __name__ == '__main__':
     load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
     create_tables()
     port = int(os.environ.get('PORT', 5000))
-    application.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
